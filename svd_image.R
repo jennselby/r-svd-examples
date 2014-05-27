@@ -21,16 +21,14 @@ img_green <- img[,,3]
 trans <- function(orig, trans.mat) {
      orig_rows <- dim(orig)[1]
      orig_cols <- dim(orig)[2]
-     new_size <- max(orig_rows, orig_cols) * sqrt(2)
+     new_size <- max(orig_rows, orig_cols) * sqrt(2) * 2
      new <- matrix(1.0, nrow=new_size, ncol=new_size)
-     row.offset <- as.integer(orig_rows/2)
-     col.offset <- as.integer(orig_cols/2)
-     for (row in (-row.offset+1):row.offset) {
-         for (col in (-col.offset+1):col.offset) {
+     for (row in 1:orig_rows) {
+         for (col in 1:orig_cols) {
              coords <- trans.mat %*% matrix(c(row, col), ncol=1)
-             new.row <- as.integer(coords[1] + row.offset)
-             new.col <- as.integer(coords[2] + col.offset)
-             new[new.row, new.col] <- orig[row + row.offset, col + col.offset]
+             new.row <- as.integer(coords[1] + new_size/2)
+             new.col <- as.integer(coords[2] + new_size/2)
+             new[new.row, new.col] <- orig[row, col]
          }}
      return (new)
 }
@@ -47,9 +45,8 @@ rot45 <- matrix(c(cos(pi/4), -sin(pi/4), sin(pi/4), cos(pi/4)), ncol=2)
 img_rot45 <- trans(img_red, rot45)
 #rasterImage(img_rot45, 1, 1, plot_size, plot_size)
 
-# TODO: doesn't work
-#rot270 <- matrix(c(0, 1, -1, 0), ncol=2)
-#img_rot270 <- trans(img_red, rot270)
+rot270 <- matrix(c(0, 1, -1, 0), ncol=2)
+img_rot270 <- trans(img_red, rot270)
 #rasterImage(img_rot270, 1, 1, plot_size, plot_size)
 
 shear <- matrix(c(1, 0, .5, 1), ncol=2)
