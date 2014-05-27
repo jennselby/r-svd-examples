@@ -9,53 +9,53 @@ head(img)
 tail(img)
 
 # display image
-plot_size <- max(dim(img)) * sqrt(2)
-plot(c(1, plot_size), c(1, plot_size), type='n')
-#rasterImage(img, 1, 1, plot_size, plot_size)
+plot.size <- max(dim(img)) * sqrt(2)
+plot(c(1, plot.size), c(1, plot.size), type='n')
+#rasterImage(img, 1, 1, plot.size, plot.size)
 
 # split color channels
-img_red <- img[,,1]
-img_blue <- img[,,2]
-img_green <- img[,,3]
+img.red <- img[,,1]
+img.blue <- img[,,2]
+img.green <- img[,,3]
 
 trans <- function(orig, trans.mat) {
-     orig_rows <- dim(orig)[1]
-     orig_cols <- dim(orig)[2]
-     new_size <- max(orig_rows, orig_cols) * sqrt(2) * 2
-     new <- matrix(1.0, nrow=new_size, ncol=new_size)
-     for (row in 1:orig_rows) {
-         for (col in 1:orig_cols) {
+     orig.rows <- dim(orig)[1]
+     orig.cols <- dim(orig)[2]
+     new.size <- max(orig.rows, orig.cols) * sqrt(2) * 2
+     new <- matrix(1.0, nrow=new.size, ncol=new.size)
+     for (row in 1:orig.rows) {
+         for (col in 1:orig.cols) {
              coords <- trans.mat %*% matrix(c(row, col), ncol=1)
-             new.row <- as.integer(coords[1] + new_size/2)
-             new.col <- as.integer(coords[2] + new_size/2)
+             new.row <- as.integer(coords[1] + new.size/2)
+             new.col <- as.integer(coords[2] + new.size/2)
              new[new.row, new.col] <- orig[row, col]
          }}
      return (new)
 }
 
 rot90 <- matrix(c(0, -1, 1, 0), ncol=2)
-img_rot90 <- trans(img_red, rot90)
-#rasterImage(img_rot90, 1, 1, plot_size, plot_size)
+img.rot90 <- trans(img.red, rot90)
+#rasterImage(img.rot90, 1, 1, plot.size, plot.size)
 
 rot180 <- matrix(c(-1, 0, 0, -1), ncol=2)
-img_rot180 <- trans(img_red, rot180)
-#rasterImage(img_rot180, 1, 1, plot_size, plot_size)
+img.rot180 <- trans(img.red, rot180)
+#rasterImage(img.rot180, 1, 1, plot.size, plot.size)
 
 rot45 <- matrix(c(cos(pi/4), -sin(pi/4), sin(pi/4), cos(pi/4)), ncol=2)
-img_rot45 <- trans(img_red, rot45)
-#rasterImage(img_rot45, 1, 1, plot_size, plot_size)
+img.rot45 <- trans(img.red, rot45)
+#rasterImage(img.rot45, 1, 1, plot.size, plot.size)
 
 rot270 <- matrix(c(0, 1, -1, 0), ncol=2)
-img_rot270 <- trans(img_red, rot270)
-#rasterImage(img_rot270, 1, 1, plot_size, plot_size)
+img.rot270 <- trans(img.red, rot270)
+#rasterImage(img.rot270, 1, 1, plot.size, plot.size)
 
 shear <- matrix(c(1, 0, .5, 1), ncol=2)
-img_shear <- trans(img_red, shear)
-#rasterImage(img_shear, 1, 1, plot_size, plot_size)
+img.shear <- trans(img.red, shear)
+#rasterImage(img.shear, 1, 1, plot.size, plot.size)
 shear.svd <- svd(shear)
-img_shear_u <- trans(img_red, shear.svd$u)
-#rasterImage(img_shear_u, 1, 1, plot_size, plot_size)
-img_shear_d <- trans(img_red, diag(shear.svd$d))
-#rasterImage(img_shear_d, 1, 1, plot_size, plot_size)
-img_shear_v <- trans(img_red, t(shear.svd$v))
-#rasterImage(img_shear_v, 1, 1, plot_size, plot_size)
+img.shear.u <- trans(img.red, shear.svd$u)
+#rasterImage(img.shear.u, 1, 1, plot.size, plot.size)
+img.shear.d <- trans(img.red, diag(shear.svd$d))
+#rasterImage(img.shear.d, 1, 1, plot.size, plot.size)
+img.shear.v <- trans(img.red, t(shear.svd$v))
+#rasterImage(img.shear.v, 1, 1, plot.size, plot.size)
